@@ -61,7 +61,7 @@ For a more detailed installation and setup walkthrough, please see the [manual s
 == Screenshots ==
 
 1. Settings Panel: Supports network setting and wp-config constant overrides.
-2. Setup Assistant 
+2. Setup Assistant
 3. Setup Assistant: Google Login
 4. Setup Assistant: Approve Permissions
 5. Setup Assistant: Project & Bucket
@@ -127,7 +127,7 @@ Before upgrading to WP-Stateless 3.0, please, make sure you tested it on your de
 * FIX - Fixed vulnerability issues.
 * FIX - Fixed erros and warnings on PHP 8.
 * FIX - problem after the upgrade [#628](https://github.com/udx/wp-stateless/issues/628).
-* FIX - image_downsize() PHP8 Required parameter $id follows optional parameter $false [#619](https://github.com/udx/wp-stateless/issues/619). 
+* FIX - image_downsize() PHP8 Required parameter $id follows optional parameter $false [#619](https://github.com/udx/wp-stateless/issues/619).
 
 = 3.1.1 =
 * ENHANCEMENT - Notification for the administrator about finished synchronization. GitHub issue [#576](https://github.com/udx/wp-stateless/issues/576).

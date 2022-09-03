@@ -126,6 +126,7 @@ class ComposerStaticInit596548c05e44593658ee0f30115abee3
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Google_AccessToken_Revoke' => __DIR__ . '/../..' . '/src/aliases.php',
         'Google_AccessToken_Verify' => __DIR__ . '/../..' . '/src/aliases.php',
         'Google_AuthHandler_AuthHandlerFactory' => __DIR__ . '/../..' . '/src/aliases.php',
