@@ -4,10 +4,14 @@ This is a fork of https://github.com/udx/wp-stateless to address an out-of-date 
 
 # To Release
 
-Run `$ RELEASE_VERSION=<TAG_VERSION> sh build.sh`. This will build the proper package and push the versioned tag to GitHub. From there, download the tagged build and copy into the WordPress installation.
+Commit any changes. Run `$ RELEASE_VERSION=<TAG_VERSION> sh build.sh`. This will build the proper package and push the versioned tag to GitHub. From there, download the tagged build and copy into the WordPress installation.
 
 # v1.0.0
 
 Updated the embeded Google API library's dependencies.
 
 `cd lib/Google && composer update --no-dev`
+
+# v1.0.1 (3.2.2a)
+
+Removed UDX libraries from composer files.
