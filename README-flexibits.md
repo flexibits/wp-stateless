@@ -21,3 +21,9 @@ Removed UDX libraries from composer files.
 Updated the embedded Google API library's dependencies.
 
 `cd lib/Google && composer update --no-dev`
+
+# v1.0.3 (3.2.5b)
+
+Updated the embedded Google API library's dependencies.
+
+`pushd lib/Google && composer update --no-dev && popd`
