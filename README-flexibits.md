@@ -27,3 +27,9 @@ Updated the embedded Google API library's dependencies.
 Updated the embedded Google API library's dependencies.
 
 `pushd lib/Google && composer update --no-dev && popd`
+
+# v1.0.4 (3.2.5c)
+
+Updated the embedded Google API library's dependencies.
+
+`pushd lib/Google && composer update --no-dev && popd`
