@@ -1,9 +1,10 @@
 {
   "name": "udx/lib-settings",
+  "version": "0.3.0",
   "keywords": [ "settings" ],
   "type": "library",
   "require": {
-    "udx/lib-utility": "~0.3"
+    "udx/lib-utility": "~0.4"
   },
   "require-dev": {
     "justinrainbow/json-schema": "1.1.*"

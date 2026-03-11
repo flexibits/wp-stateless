@@ -1,23 +1,19 @@
 <?php
 /**
- * License Checker
- * Check current License
- * Check current Subscription
- * Check current Activation
- * depends on Plugin or Theme
+ * Update Checker
  *
  * @namespace UsabilityDynamics
  *
  */
 namespace UsabilityDynamics\UD_API {
 
-  if( !class_exists( 'UsabilityDynamics\UD_API\License_Checker' ) ) {
+  if( !class_exists( 'UsabilityDynamics\UD_API\Update_Checker' ) ) {
 
     /**
      * 
      * @author: peshkov@UD
      */
-    class License_Checker {
+    class Update_Checker {
     
       /**
        *
@@ -25,7 +21,7 @@ namespace UsabilityDynamics\UD_API {
       public static $version = '1.0.0';
       
       /**
-       * URL to access the License API Manager.
+       * URL to access the Update API Manager.
        */
       private $upgrade_url;
       
@@ -160,19 +156,19 @@ namespace UsabilityDynamics\UD_API {
          */
          
         /**
-         * Plugin License Updates
+         * Plugin Updates
          */
         if( $this->type == 'plugin' ) {
-          //** Check For Plugin License Updates */
-          add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'license_check' ) );
+          //** Check For Plugin Updates */
+          add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'update_check' ) );
           //** Check For Plugin/Theme Information to display on the update details page */
           add_filter( 'plugins_api', array( $this, 'request' ), 10, 3 );
         }
         /**
-         * Check For Theme License Updates
+         * Theme Updates
          */
         elseif ( $this->type == 'theme' ) {
-          add_filter( 'pre_set_site_transient_update_themes', array( $this, 'license_check' ) );
+          add_filter( 'pre_set_site_transient_update_themes', array( $this, 'update_check' ) );
         }
 
         add_action( 'wp_ajax_ud_api_dismiss', array( $this, 'dismiss_notices' ) );
@@ -189,14 +185,14 @@ namespace UsabilityDynamics\UD_API {
       }
 
       /**
-       * Check for License updates against the remote server.
+       * Check for updates against the remote server.
        *
        * @access public
        * @since  1.0.0
        * @param  object $transient
        * @return object $transient
        */
-      public function license_check( $transient ) {
+      public function update_check( $transient ) {
         
         //** Check if the transient contains the 'checked' information */
         //** If no, just return its value without hacking it */
@@ -222,6 +218,38 @@ namespace UsabilityDynamics\UD_API {
         $response = $this->plugin_information( $args );
         //** Displays an admin error message in the WordPress dashboard */
         $this->check_response_for_errors( $response );
+
+        //** Set version variables */
+        if ( isset( $response ) && is_object( $response ) && $response !== false ) {
+          //** New plugin version from the API */
+          $new_ver = (string)$response->new_version;
+          //** Current installed plugin version */
+          $curr_ver = (string)$this->software_version;
+          //$curr_ver = (string)$transient->checked[$this->name];
+        }
+
+        //** If there is a new version, modify the transient to reflect an update is available */
+        if ( isset( $new_ver ) && isset( $curr_ver ) ) {
+          if ( $response !== false && version_compare( $new_ver, $curr_ver, '>' ) ) {
+            if( $this->type == 'plugin' ) {
+              if( isset( $response->slug ) ) {
+                $response->slug = sanitize_title( $response->slug );  
+              }
+              $transient->response[$this->file] = $response;
+            } else {
+              $theme = basename( dirname( $this->file ) );
+              $response = (array)$response;
+              if( empty( $response[ 'url' ] ) ) { 
+                $response[ 'url' ] = !empty( $this->changelog ) ? $this->changelog : 'https://www.usabilitydynamics.com';
+              }
+              $transient->response[$theme] = (array)$response;
+            }
+            
+          }
+        }
+        
+        //echo "<pre>"; print_r( $this ); echo "</pre>"; die();
+        //echo "<pre>"; print_r( $transient ); echo "</pre>"; die();
 
         return $transient;
       }
@@ -321,19 +349,20 @@ namespace UsabilityDynamics\UD_API {
 
           $plugins = get_plugins();
           $name = isset( $plugins[$this->name] ) ? $plugins[$this->name]['Name'] : $this->name;
+          $nonce = wp_create_nonce( 'ud_api_dismiss' );
           
           if ( isset( $response->errors['no_key'] ) && $response->errors['no_key'] == 'no_key' && isset( $response->errors['no_subscription'] ) && $response->errors['no_subscription'] == 'no_subscription' ) {
 
             $no_key_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_no_key', '' );
             $show_no_key_error = $this->check_dismiss_time( $no_key_dismissed );
             if( $show_no_key_error ) {
-                $this->errors[] = sprintf( __( 'A license key for %s could not be found. Maybe you forgot to enter a license key when setting up %s, or the key was deactivated in your account. You can reactivate or purchase a license key from your account <a href="%s" target="_blank">Licences</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_key" href="#">dismiss</a>.', $this->text_domain ), $name, $name, $this->renew_license_url, sanitize_key( $name ) );
+                $this->errors[] = sprintf( __( 'A license key for %s could not be found. Maybe you forgot to enter a license key when setting up %s, or the key was deactivated in your account. You can reactivate or purchase a license key from your account <a href="%s" target="_blank">Licences</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_key" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $name, $this->renew_license_url, sanitize_key( $name ), $nonce );
             }
 
             $no_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_no_subscription', '' );
             $show_no_subscription_error = $this->check_dismiss_time( $no_subscription_dismissed );
             if( $show_no_subscription_error ) {
-                $this->errors[] = sprintf( __( 'A subscription for %s could not be found. You can purchase a subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) );
+                $this->errors[] = sprintf( __( 'A subscription for %s could not be found. You can purchase a subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce );
             }
 
           } else if ( isset( $response->errors['exp_license'] ) && $response->errors['exp_license'] == 'exp_license' ) {
@@ -341,7 +370,7 @@ namespace UsabilityDynamics\UD_API {
             $exp_license_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_exp_license', '' );
             $show_exp_license_error = $this->check_dismiss_time( $exp_license_dismissed );
             if( $show_exp_license_error ) {
-                $this->errors[] = sprintf( __( 'The license key for %s has expired. You can reactivate or get a license key from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_exp_license" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) );
+                $this->errors[] = sprintf( __( 'The license key for %s has expired. You can reactivate or get a license key from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_exp_license" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce );
             }
 
           }  else if ( isset( $response->errors['hold_subscription'] ) && $response->errors['hold_subscription'] == 'hold_subscription' ) {
@@ -349,7 +378,7 @@ namespace UsabilityDynamics\UD_API {
             $hold_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_hold_subscription', '' );
             $show_hold_subscription_error = $this->check_dismiss_time( $hold_subscription_dismissed );
             if( $show_hold_subscription_error ) {
-                $this->errors[] = sprintf( __( 'The subscription for %s is on-hold. You can reactivate the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_hold_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) );
+                $this->errors[] = sprintf( __( 'The subscription for %s is on-hold. You can reactivate the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_hold_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce );
             }
 
           } else if ( isset( $response->errors['cancelled_subscription'] ) && $response->errors['cancelled_subscription'] == 'cancelled_subscription' ) {
@@ -357,7 +386,7 @@ namespace UsabilityDynamics\UD_API {
             $cancelled_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_cancelled_subscription', '' );
             $show_cancelled_subscription_error = $this->check_dismiss_time( $cancelled_subscription_dismissed );
             if( $show_cancelled_subscription_error ) {
-                $this->errors[] = sprintf( __( 'The subscription for %s has been cancelled. You can renew the subscription from your account <a href="%s" target="_blank">dashboard</a>. A new license key will be emailed to you after your order has been completed. <a class="dismiss-error dismiss" data-key="dismissed_error_%s_cancelled_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) );
+                $this->errors[] = sprintf( __( 'The subscription for %s has been cancelled. You can renew the subscription from your account <a href="%s" target="_blank">dashboard</a>. A new license key will be emailed to you after your order has been completed. <a class="dismiss-error dismiss" data-key="dismissed_error_%s_cancelled_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce );
             }
 
           } else if ( isset( $response->errors['exp_subscription'] ) && $response->errors['exp_subscription'] == 'exp_subscription' ) {
@@ -365,7 +394,7 @@ namespace UsabilityDynamics\UD_API {
             $exp_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_exp_subscription', '' );
             $show_exp_subscription_error = $this->check_dismiss_time( $exp_subscription_dismissed );
             if( $show_exp_subscription_error ) {
-                $this->errors[] = sprintf( __( 'The subscription for %s has expired. You can reactivate the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_exp_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) ) ;
+                $this->errors[] = sprintf( __( 'The subscription for %s has expired. You can reactivate the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_exp_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce ) ;
             }
 
           } else if ( isset( $response->errors['suspended_subscription'] ) && $response->errors['suspended_subscription'] == 'suspended_subscription' ) {
@@ -373,7 +402,7 @@ namespace UsabilityDynamics\UD_API {
             $suspended_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_suspended_subscription', '' );
             $show_suspended_subscription_error = $this->check_dismiss_time( $suspended_subscription_dismissed );
             if( $show_suspended_subscription_error ) {
-                $this->errors[] = sprintf( __( 'The subscription for %s has been suspended. You can reactivate the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_suspended_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) ) ;
+                $this->errors[] = sprintf( __( 'The subscription for %s has been suspended. You can reactivate the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_suspended_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce ) ;
             }
 
           } else if ( isset( $response->errors['pending_subscription'] ) && $response->errors['pending_subscription'] == 'pending_subscription' ) {
@@ -381,7 +410,7 @@ namespace UsabilityDynamics\UD_API {
             $pending_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_pending_subscription', '' );
             $show_pending_subscription_error = $this->check_dismiss_time( $pending_subscription_dismissed );
             if( $show_pending_subscription_error ) {
-                $this->errors[] = sprintf( __( 'The subscription for %s is still pending. You can check on the status of the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_pending_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) ) ;
+                $this->errors[] = sprintf( __( 'The subscription for %s is still pending. You can check on the status of the subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_pending_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce ) ;
             }
 
           } else if ( isset( $response->errors['trash_subscription'] ) && $response->errors['trash_subscription'] == 'trash_subscription' ) {
@@ -389,7 +418,7 @@ namespace UsabilityDynamics\UD_API {
             $trash_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_trash_subscription', '' );
             $show_trash_subscription_error = $this->check_dismiss_time( $trash_subscription_dismissed );
             if( $show_trash_subscription_error ) {
-                $this->errors[] = sprintf( __( 'The subscription for %s has been placed in the trash and will be deleted soon. You can get a new subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_trash_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) ) ;
+                $this->errors[] = sprintf( __( 'The subscription for %s has been placed in the trash and will be deleted soon. You can get a new subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_trash_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce ) ;
             }
 
           } else if ( isset( $response->errors['no_subscription'] ) && $response->errors['no_subscription'] == 'no_subscription' ) {
@@ -397,7 +426,7 @@ namespace UsabilityDynamics\UD_API {
             $no_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_no_subscription', '' );
             $show_no_subscription_error = $this->check_dismiss_time( $no_subscription_dismissed );
             if( $show_no_subscription_error ) {
-                $this->errors[] = sprintf( __( 'A subscription for %s could not be found. You can get a subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) );
+                $this->errors[] = sprintf( __( 'A subscription for %s could not be found. You can get a subscription from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce );
             }
 
           } else if ( isset( $response->errors['no_activation'] ) && $response->errors['no_activation'] == 'no_activation' ) {
@@ -405,7 +434,7 @@ namespace UsabilityDynamics\UD_API {
             $no_activation_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_no_activation', '' );
             $show_no_activation_error = $this->check_dismiss_time( $no_activation_dismissed );
             if( $show_no_activation_error ) {
-                $this->errors[] = sprintf( __( '%s has not been activated. Go to the settings page and enter the license key and license email to activate %s. <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_activation" href="#">dismiss</a>.', $this->text_domain ), $name, $name, sanitize_key( $name ) ) ;
+                $this->errors[] = sprintf( __( '%s has not been activated. Go to the settings page and enter the license key and license email to activate %s. <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_activation" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $name, sanitize_key( $name ), $nonce ) ;
             }
 
           } else if ( isset( $response->errors['no_key'] ) && $response->errors['no_key'] == 'no_key' ) {
@@ -413,7 +442,7 @@ namespace UsabilityDynamics\UD_API {
             $no_key_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_no_key', '' );
             $show_no_key_error = $this->check_dismiss_time( $no_key_dismissed );
             if( $show_no_key_error ) {
-                $this->errors[] = sprintf( __( 'A license key for %s could not be found. Maybe you forgot to enter a license key when setting up %s, or the key was deactivated in your account. You can reactivate or get a license key from your account <a href="%s" target="_blank">Licences</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_key" href="#">dismiss</a>.', $this->text_domain ), $name, $name, $this->renew_license_url, sanitize_key( $name ) );
+                $this->errors[] = sprintf( __( 'A license key for %s could not be found. Maybe you forgot to enter a license key when setting up %s, or the key was deactivated in your account. You can reactivate or get a license key from your account <a href="%s" target="_blank">Licences</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_no_key" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $name, $this->renew_license_url, sanitize_key( $name ), $nonce );
             }
 
           } else if ( isset( $response->errors['download_revoked'] ) && $response->errors['download_revoked'] == 'download_revoked' ) {
@@ -421,7 +450,7 @@ namespace UsabilityDynamics\UD_API {
             $download_revoked_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_download_revoked', '' );
             $show_download_revoked_error = $this->check_dismiss_time( $download_revoked_dismissed );
             if( $show_download_revoked_error ) {
-                $this->errors[] = sprintf( __( 'Download permission for %s has been revoked possibly due to a license key or subscription expiring. You can reactivate or get a license key from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_download_revoked" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) ) ;
+                $this->errors[] = sprintf( __( 'Download permission for %s has been revoked possibly due to a license key or subscription expiring. You can reactivate or get a license key from your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_download_revoked" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce ) ;
             }
 
           } else if ( isset( $response->errors['switched_subscription'] ) && $response->errors['switched_subscription'] == 'switched_subscription' ) {
@@ -429,7 +458,7 @@ namespace UsabilityDynamics\UD_API {
             $switched_subscription_dismissed = get_option( 'dismissed_error_' .  sanitize_key( $name ) . '_switched_subscription', '' );
             $show_switched_subscription_error = $this->check_dismiss_time( $switched_subscription_dismissed );
             if( $show_switched_subscription_error ) {
-                $this->errors[] = sprintf( __( 'You changed the subscription for %s, so you will need to enter your new API License Key in the settings page. The License Key should have arrived in your email inbox, if not you can get it by logging into your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_switched_subscription" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ) ) ;
+                $this->errors[] = sprintf( __( 'You changed the subscription for %s, so you will need to enter your new API License Key in the settings page. The License Key should have arrived in your email inbox, if not you can get it by logging into your account <a href="%s" target="_blank">dashboard</a> | <a class="dismiss-error dismiss" data-key="dismissed_error_%s_switched_subscription" data-nonce="%s" href="#">dismiss</a>.', $this->text_domain ), $name, $this->renew_license_url, sanitize_key( $name ), $nonce ) ;
             }
 
           }
@@ -471,6 +500,7 @@ namespace UsabilityDynamics\UD_API {
                         var data = {
                             action: 'ud_api_dismiss',
                             key: _this.data('key'),
+                            _ajax_nonce: _this.data('nonce'),
                         }
 
                         jQuery.post( "<?php echo admin_url( 'admin-ajax.php' ); ?>", data, function ( result_data ) {
@@ -513,21 +543,31 @@ namespace UsabilityDynamics\UD_API {
          * @throws \Exception
          */
         public function dismiss_notices(){
+          check_ajax_referer('ud_api_dismiss');
+
+          if ( !is_user_logged_in() ) {
+            wp_send_json_error( array( 'error' => __( 'You are not allowed to do this action.', $this->text_domain ) ) );
+          }
+
           $response = array(
               'success' => '0',
               'error' => __( 'There was an error in request.', $this->text_domain ),
           );
+
           $error = false;
 
-          if( empty($_POST['key']) ) {
-            $response['error'] = __( 'Invalid key', $this->text_domain );
+          $option_key = isset($_POST['key']) ? sanitize_key($_POST['key']) : '';
+
+          if ( strpos($option_key, 'dismissed_') !== 0 ) {
+            $response['error'] = __( 'Invalid key', $this->domain );
             $error = true;
           }
-
-          if ( ! $error && update_option( ( $_POST['key'] ), time() ) ) {
+  
+          if ( !$error && update_option( $option_key, time() ) ) {
             $response['success'] = '1';
+            $response['error'] = null;
           }
-
+  
           wp_send_json( $response );
         }
 
