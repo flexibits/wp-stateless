@@ -37,3 +37,16 @@ Updated the embedded Google API library's dependencies.
 Updated the embedded Google API library's dependencies.
 
 `$ pushd lib/Google && composer update --no-dev && popd`
+
+## v1.0.5 (based on 3.2.5, built locally)
+
+Bumped firebase/php-jwt and wpmetabox/meta-box.
+
+Updated main deps.
+
+`$ composer update --no-dev`
+`$ pnpm install`
+
+Updated the baked-in Google API library's dependencies (with composer tweaks)
+
+`$ pushd lib/Google && composer update --no-dev && popd`
