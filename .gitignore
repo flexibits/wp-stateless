@@ -26,3 +26,5 @@ package-lock.json
 *.pid
 *.gz
 wp-stateless.wiki
+
+temp-build-*

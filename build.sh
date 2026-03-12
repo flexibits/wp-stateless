@@ -136,7 +136,7 @@ else
   fi
   echo $CIRCLE_BRANCH
   echo "---"
-    
+
   # Remove temp directory if it already exists to prevent issues before proceed
   if [ -d temp-build-$RELEASE_VERSION ]; then
     rm -rf temp-build-$RELEASE_VERSION
@@ -148,25 +148,31 @@ else
   
   echo "Do production build from scratch to temp directory"
   ORIGIN_URL="$( git config --get remote.origin.url )"
-  git clone $ORIGIN_URL
+  if [ "$RELEASE_VERSION" != "local" ]; then
+    git clone $ORIGIN_URL
+  else
+    git clone /Users/doubleforte/Flexibits/repos/wp-stateless
+  fi
   cd "$( basename `git rev-parse --show-toplevel` )"
   # Be sure we are on the same branch
   git checkout $CIRCLE_BRANCH
   echo "---"
 
-  #echo "Clean up structure ( remove composer relations )"
-  #rm -rf composer.lock
-  #rm -rf vendor
-
-  #echo "Running: composer install --no-dev --no-interaction"
-  #composer install --no-dev --no-interaction --quiet
-  #echo "---"
+  echo "Clean up structure ( remove composer relations )"
+  rm -rf composer.lock
+  rm -rf vendor
   
-  echo "Create local and remote temp branch temp-automatic-branch-"$RELEASE_VERSION
-  git checkout -b temp-branch-$RELEASE_VERSION
-  git push origin temp-branch-$RELEASE_VERSION
-  git branch --set-upstream-to=origin/temp-branch-$RELEASE_VERSION temp-branch-$RELEASE_VERSION
+  echo "Running: composer install --no-dev --no-interaction"
+  composer install --no-dev --no-interaction --quiet
   echo "---"
+
+  if [ "$RELEASE_VERSION" != "local" ]; then
+    echo "Create local and remote temp branch temp-automatic-branch-"$RELEASE_VERSION
+    git checkout -b temp-branch-$RELEASE_VERSION
+    git push origin temp-branch-$RELEASE_VERSION
+    git branch --set-upstream-to=origin/temp-branch-$RELEASE_VERSION temp-branch-$RELEASE_VERSION
+    echo "---"
+  fi
 
   # It's used only by CircleCi. Should not be called directly.
   #
@@ -178,7 +184,7 @@ else
 
   echo "Install Node modules to minify composer.json"
   npm install
-  grunt json-minify
+  npx grunt json-minify
 
   echo "Be sure we do not add node and other specific files needed only for development"
   rm -rf vendor/composer/installers
@@ -199,34 +205,45 @@ else
   find ./vendor -name .git -exec rm -rf '{}' \;
   echo "Be sure we do not add .svn directories"
   find ./vendor -name .svn -exec rm -rf '{}' \;
-  echo "Git Add"
-  git add --all
-  echo "Be sure we added vendor directory"
-  git add -f vendor
+
+  if [ "$RELEASE_VERSION" == "local" ]; then
+    rm -rf .git
+    rm -rf .gitignore
+    rm -rf .github
+  fi
+
+  if [ "$RELEASE_VERSION" != "local" ]; then
+    echo "Git Add"
+    git add --all
+    echo "Be sure we added vendor directory"
+    git add -f vendor
+  fi
   echo "---"
   
-  echo "Now commit our build to remote branch"
-  git commit -m "[ci skip] Distributive Auto Build" --quiet
-  git pull
-  git push --quiet
-  echo "---"
+  if [ "$RELEASE_VERSION" != "local" ]; then
+    echo "Now commit our build to remote branch"
+    git commit -m "[ci skip] Distributive Auto Build" --quiet
+    git pull
+    git push --quiet
+    echo "---"
 
-  echo "Finally, create tag "$RELEASE_VERSION
-  git tag -a $RELEASE_VERSION -m "v"$RELEASE_VERSION" - Distributive Auto Build"
-  git push origin $RELEASE_VERSION
-  echo "---"
+    echo "Finally, create tag "$RELEASE_VERSION
+    git tag -a $RELEASE_VERSION -m "v"$RELEASE_VERSION" - Distributive Auto Build"
+    git push origin $RELEASE_VERSION
+    echo "---"
 
-  echo "Remove local and remote temp branches, but switch to previous branch before"
-  git checkout $CIRCLE_BRANCH
-  git push origin --delete temp-branch-$RELEASE_VERSION
-  git branch -D temp-branch-$RELEASE_VERSION
-  echo "---"
-  
-  # Remove temp directory.
-  echo "Remove temp directory"
-  cd ../..
-  rm -rf temp-build-$RELEASE_VERSION
-  echo "---"
+    echo "Remove local and remote temp branches, but switch to previous branch before"
+    git checkout $CIRCLE_BRANCH
+    git push origin --delete temp-branch-$RELEASE_VERSION
+    git branch -D temp-branch-$RELEASE_VERSION
+    echo "---"
+    
+    Remove temp directory.
+    echo "Remove temp directory"
+    cd ../..
+    rm -rf temp-build-$RELEASE_VERSION
+    echo "---"
+  fi
   
   echo "Done"
 
