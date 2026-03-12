@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'wpcloud/wp-stateless',
-        'pretty_version' => 'dev-fixing-again',
-        'version' => 'dev-fixing-again',
-        'reference' => '6a45245b022c1af30f587e0e2bc9170cc7d6544e',
+        'pretty_version' => '3.0.x-dev',
+        'version' => '3.0.9999999.9999999-dev',
+        'reference' => 'dd43ee08ffcc25ee728c267086d7f64a6d7e6d43',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -86,9 +86,9 @@
             'dev_requirement' => false,
         ),
         'wpcloud/wp-stateless' => array(
-            'pretty_version' => 'dev-fixing-again',
-            'version' => 'dev-fixing-again',
-            'reference' => '6a45245b022c1af30f587e0e2bc9170cc7d6544e',
+            'pretty_version' => '3.0.x-dev',
+            'version' => '3.0.9999999.9999999-dev',
+            'reference' => 'dd43ee08ffcc25ee728c267086d7f64a6d7e6d43',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -161,9 +161,11 @@ else
   echo "Clean up structure ( remove composer relations )"
   rm -rf composer.lock
   rm -rf vendor
+  rm -rf wp-content
   
   echo "Running: composer install --no-dev --no-interaction"
   composer install --no-dev --no-interaction --quiet
+  pnpm install --frozen-lockfile
   echo "---"
 
   if [ "$RELEASE_VERSION" != "local" ]; then

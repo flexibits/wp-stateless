@@ -3,7 +3,7 @@
  *
  * Class BasicUtilityTest
  */
-class BasicUtilityTest extends PHPUnit_Framework_TestCase {
+class BasicUtilityTest extends \PHPUnit\Framework\TestCase {
 
   /**
    * Test Object Extending with Defaults

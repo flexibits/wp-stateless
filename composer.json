@@ -108,6 +108,15 @@
     "coenjacobs/mozart": "0.7.1",
     "deliciousbrains/wp-background-processing": "^1.0"
   },
+  "scripts": {
+    "post-install-cmd": [
+      "@patch-meta-box"
+    ],
+    "post-update-cmd": [
+      "@patch-meta-box"
+    ],
+    "patch-meta-box": "php -r \"\\$f='wp-content/plugins/meta-box/pnpm-lock.yaml'; if(file_exists(\\$f)) { unlink(\\$f); echo 'Removed meta-box pnpm-lock.yaml (root workspace lock file takes precedence)' . PHP_EOL; }\""
+  },
   "config": {
     "allow-plugins": {
       "composer/installers": true
