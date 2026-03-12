@@ -82,25 +82,27 @@ namespace UsabilityDynamics\UD_API {
         ) ) );
         
         //** Set available screens */
-        $screens = array();
-        if( $this->type == 'theme' ) {
-          $screens =array_filter( array(
-            'licenses' => __( 'License', $this->domain ),
-            'more_products' => false,
-          ) );
-        } elseif ( $this->type == 'plugin' ) {
-          $screens =array_filter( array(
-            'licenses' => __( 'Licenses', $this->domain ),
-            'more_products' => __( 'More Products', $this->domain ),
-          ) );
-        }
-        
-        //** UI */
-        $this->ui = new UI( array_merge( $args, array(
-          'token' => $this->token,
-          'screens' => $screens,
-        ) ) );
-        
+        add_action('init', function () use ($args) {
+          $screens = array();
+          if( $this->type == 'theme' ) {
+            $screens =array_filter( array(
+              'licenses' => __( 'License', $this->domain ),
+              'more_products' => false,
+            ) );
+          } elseif ( $this->type == 'plugin' ) {
+            $screens =array_filter( array(
+              'licenses' => __( 'Licenses', $this->domain ),
+              'more_products' => __( 'More Products', $this->domain ),
+            ) );
+          }
+          
+          // Initialize UI
+          $this->ui = new UI( array_merge( $args, array(
+            'token' => $this->token,
+            'screens' => $screens,
+          ) ) );
+        }, 20);
+
         $path = wp_normalize_path( dirname( dirname( __DIR__ ) ) );
         $this->screens_path = trailingslashit( $path . '/static/templates' );
         if( $this->type == 'theme' && strpos( $path, wp_normalize_path( WP_PLUGIN_DIR ) ) === false ) {
@@ -283,7 +285,7 @@ namespace UsabilityDynamics\UD_API {
           $status = 'true';
         }
         
-        $redirect_url = \UsabilityDynamics\Utility::current_url( array( 'type' => urlencode( $type ), 'status' => urlencode( $status ) ), array( 'action', 'filepath', '_wpnonce' ) );
+        $redirect_url = Utility::current_url( array( 'type' => urlencode( $type ), 'status' => urlencode( $status ) ), array( 'action', 'filepath', '_wpnonce' ) );
         wp_safe_redirect( $redirect_url );
         exit;
       }
@@ -472,7 +474,7 @@ namespace UsabilityDynamics\UD_API {
               }
               //echo "<pre>"; print_r( $v ); echo "</pre>"; //die();
               if( !empty( $api_key ) ) {
-                new License_Checker( array(
+                new Update_Checker( array(
                   'type' => $this->type,
                   'upgrade_url' => $this->api_url,
                   'name' => $v[ 'product_name' ],
