@@ -2,7 +2,8 @@
   "name": "wpcloud/wp-stateless",
   "description": "WP-Stateless WordPress plugin",
   "type": "wordpress-plugin",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "homepage": "https://udx.io",
   "authors": [
     {
@@ -42,7 +43,7 @@
     "udx/lib-ud-api-client": "~1.2",
     "ccampbell/chromephp": "^4.1",
     "firebase/php-jwt": "^7.0",
-    "wpmetabox/meta-box": "5.6.3"
+    "wpmetabox/meta-box": "^5.11"
   },
   "autoload": {
     "classmap": [

@@ -35,6 +35,11 @@ class ComposerStaticInitc59d002476a452800baaf79c430753cb
         array (
             'Psr\\Container\\' => 14,
         ),
+        'M' =>
+        array (
+            'MetaBox\\Support\\' => 16,
+            'MetaBox\\' => 8,
+        ),
         'L' =>
         array (
             'League\\MimeTypeDetection\\' => 25,
@@ -95,6 +100,14 @@ class ComposerStaticInitc59d002476a452800baaf79c430753cb
         'Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'MetaBox\\Support\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/wpmetabox/support',
+        ),
+        'MetaBox\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/wp-content/plugins/meta-box/src',
         ),
         'League\\MimeTypeDetection\\' =>
         array (
