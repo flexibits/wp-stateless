@@ -12,6 +12,20 @@
   ],
   "repositories": [
     {
+      "type": "path",
+      "url": "lib/udx/lib-settings",
+      "options": {
+        "symlink": false
+      }
+    },
+    {
+      "type": "path",
+      "url": "lib/udx/lib-utility",
+      "options": {
+        "symlink": false
+      }
+    },
+    {
       "type": "composer",
       "url": "https://repository.usabilitydynamics.com"
     },
