@@ -50,3 +50,9 @@ Updated main deps.
 Updated the baked-in Google API library's dependencies (with composer tweaks)
 
 `$ pushd lib/Google && composer update --no-dev && popd`
+
+## v1.0.6 (based on 3.2.5, built locally)
+
+Updated the baked-in Google API library's dependencies (with composer tweaks)
+
+`$ pushd lib/Google && composer update --no-dev && popd`
