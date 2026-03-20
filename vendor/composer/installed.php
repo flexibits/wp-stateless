@@ -3,7 +3,7 @@
         'name' => 'wpcloud/wp-stateless',
         'pretty_version' => '3.0.x-dev',
         'version' => '3.0.9999999.9999999-dev',
-        'reference' => 'dd43ee08ffcc25ee728c267086d7f64a6d7e6d43',
+        'reference' => 'df261b51949294ddd532dfbf38a597800fcee325',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -70,7 +70,7 @@
         'udx/lib-utility' => array(
             'pretty_version' => '0.4.0',
             'version' => '0.4.0.0',
-            'reference' => 'c0da21a337a19e9b78b614ada77349cc23431fbc',
+            'reference' => '960b569bcbb4d9c390343be7e86a3163fc4019d8',
             'type' => 'library',
             'install_path' => __DIR__ . '/../udx/lib-utility',
             'aliases' => array(),
@@ -88,7 +88,7 @@
         'wpcloud/wp-stateless' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'dd43ee08ffcc25ee728c267086d7f64a6d7e6d43',
+            'reference' => 'df261b51949294ddd532dfbf38a597800fcee325',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

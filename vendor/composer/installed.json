@@ -391,10 +391,10 @@
             "dist": {
                 "type": "path",
                 "url": "lib/udx/lib-utility",
-                "reference": "c0da21a337a19e9b78b614ada77349cc23431fbc"
+                "reference": "960b569bcbb4d9c390343be7e86a3163fc4019d8"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.1.*"
+                "phpunit/phpunit": "^9.6"
             },
             "type": "library",
             "extra": {
