@@ -21,14 +21,16 @@
   },
   "pnpm": {
     "overrides": {
+      "flatted": "^3.4.2",
+      "highlight.js": "^10.4.1",
+      "lodash": "^4.17.21",
+      "marked": "^4.0.10",
+      "picomatch@<3": "^2.3.2",
+      "picomatch@>=3": "^4.0.4",
       "minimatch@<3.1.4": "3.1.5",
       "minimatch@>=9.0.0 <9.0.7": "9.0.9",
       "serialize-javascript": "^7.0.4",
-      "lodash": "^4.17.21",
-      "marked": "^4.0.10",
-      "webpack-dev-server": "^5.2.1",
-      "highlight.js": "^10.4.1",
-      "flatted": "^3.4.2"
+      "webpack-dev-server": "^5.2.1"
     }
   },
   "devDependencies": {
