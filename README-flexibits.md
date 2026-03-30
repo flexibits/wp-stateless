@@ -1,6 +1,6 @@
 # About
 
-This is a fork of https://github.com/udx/wp-stateless to address an out-of-date dependency of a dependency. The version number of the original plugin remains the same in `wp-stateless-media.php` so that the WordPress admin panel will alert us when there is an update to the original, allowing us to either switch back to the original or update the fork again. Our own version number is simply included in the "Plugin Name".
+This is a fork of https://github.com/udx/wp-stateless/releases/tag/3.2.5 to address an out-of-date dependency of a dependency. The version number of the original plugin remains the same in `wp-stateless-media.php` so that the WordPress admin panel will alert us when there is an update to the original, allowing us to either switch back to the original or update the fork again. Our own version number is simply included in the "Plugin Name".
 
 ## To Build Locally
 
@@ -63,4 +63,6 @@ Updated the baked-in Google API library's dependencies (with composer tweaks)
 
 `$ pushd lib/Google && composer update --no-dev && popd`
 
-Bumped some pnpm override deps.
+Switched to Yarn.
+
+Bumped some npm deps.

@@ -137,14 +137,16 @@ else
   echo $CIRCLE_BRANCH
   echo "---"
 
+  TEMP_BUILD_DIR="temp-build-$RELEASE_VERSION"
+
   # Remove temp directory if it already exists to prevent issues before proceed
-  if [ -d temp-build-$RELEASE_VERSION ]; then
-    rm -rf temp-build-$RELEASE_VERSION
+  if [ -d "$TEMP_BUILD_DIR" ]; then
+    rm -rf "$TEMP_BUILD_DIR"
   fi
-  
+
   echo "Create temp directory"
-  mkdir temp-build-$RELEASE_VERSION
-  cd temp-build-$RELEASE_VERSION
+  mkdir "$TEMP_BUILD_DIR"
+  cd "$TEMP_BUILD_DIR" || exit
   
   echo "Do production build from scratch to temp directory"
   ORIGIN_URL="$( git config --get remote.origin.url )"
@@ -165,7 +167,9 @@ else
   
   echo "Running: composer install --no-dev --no-interaction"
   composer install --no-dev --no-interaction --quiet
-  pnpm install --frozen-lockfile
+  # Create yarn.lock so Yarn Berry stops traversing up to the parent project root
+  touch yarn.lock
+  yarn install
   echo "---"
 
   if [ "$RELEASE_VERSION" != "local" ]; then
@@ -201,6 +205,7 @@ else
   rm -rf gruntfile.js
   rm -rf makefile
   rm -rf package.json
+  rm -rf yarn.lock
   rm -rf test
   rm -rf package-lock.json
   echo "Be sure we do not add .git directories"
@@ -240,10 +245,8 @@ else
     git branch -D temp-branch-$RELEASE_VERSION
     echo "---"
     
-    Remove temp directory.
     echo "Remove temp directory"
-    cd ../..
-    rm -rf temp-build-$RELEASE_VERSION
+    rm -rf "$TEMP_BUILD_DIR"
     echo "---"
   fi
   
