@@ -726,17 +726,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"grunt-markdown@npm:~0.7.0":
-  version: 0.7.0
-  resolution: "grunt-markdown@npm:0.7.0"
-  dependencies:
-    highlight.js: "npm:~8.4.0"
-    lodash: "npm:~2.4.1"
-    marked: "npm:~0.3.2"
-  checksum: 10c0/26315cdb6840a29799f18f828cd1cf89052ef2f0a260e2e60a23432b6c6ec9668b2d9660339f6461eb00a8d611589b636ef970019f603b9507b91418068cbb11
-  languageName: node
-  linkType: hard
-
 "grunt-phpunit@npm:~0.3.6":
   version: 0.3.6
   resolution: "grunt-phpunit@npm:0.3.6"
@@ -810,13 +799,6 @@ __metadata:
   dependencies:
     function-bind: "npm:^1.1.2"
   checksum: 10c0/3769d434703b8ac66b209a4cca0737519925bbdb61dd887f93a16372b14694c63ff4e797686d87c90f08168e81082248b9b028bad60d4da9e0d1148766f56eb9
-  languageName: node
-  linkType: hard
-
-"highlight.js@npm:~8.4.0":
-  version: 8.4.0
-  resolution: "highlight.js@npm:8.4.0"
-  checksum: 10c0/e6943dec93b60bf5eb37fd75f8efd556c366797b9b879589888e6b5af74c29c614ac0db72f596fcc6c10259a153e3163eb8c2ecf5c06f1cc12b467ed66b96171
   languageName: node
   linkType: hard
 
@@ -1096,13 +1078,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:~2.4.1":
-  version: 2.4.2
-  resolution: "lodash@npm:2.4.2"
-  checksum: 10c0/7c235180b20dc4b66cbf71d2347962798ad0c9669bb446a7098c22c8a37b3a63dc7880a71a91db314e7172de3c8cb5b1549942dfb8249d0b008ea5b66a067eb7
-  languageName: node
-  linkType: hard
-
 "make-dir@npm:^2.1.0":
   version: 2.1.0
   resolution: "make-dir@npm:2.1.0"
@@ -1126,15 +1101,6 @@ __metadata:
   version: 0.2.2
   resolution: "map-cache@npm:0.2.2"
   checksum: 10c0/05e3eb005c1b80b9f949ca007687640e8c5d0fc88dc45c3c3ab4902a3bec79d66a58f3e3b04d6985d90cd267c629c7b46c977e9c34433e8c11ecfcbb9f0fa290
-  languageName: node
-  linkType: hard
-
-"marked@npm:~0.3.2":
-  version: 0.3.19
-  resolution: "marked@npm:0.3.19"
-  bin:
-    marked: ./bin/marked
-  checksum: 10c0/ee5e268716de56a7543c245268d72e5eb1a66f67022e0392cab9744b3b38768d1db289c173679ff696cdbf1bcd82ff10520cae2296f3293989e07a17f9218705
   languageName: node
   linkType: hard
 
@@ -1176,21 +1142,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^3.0.4, minimatch@npm:^3.1.1":
+"minimatch@npm:^3.1.5":
   version: 3.1.5
   resolution: "minimatch@npm:3.1.5"
   dependencies:
     brace-expansion: "npm:^1.1.7"
   checksum: 10c0/2ecbdc0d33f07bddb0315a8b5afbcb761307a8778b48f0b312418ccbced99f104a2d17d8aca7573433c70e8ccd1c56823a441897a45e384ea76ef401a26ace70
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:~3.0.2, minimatch@npm:~3.0.4":
-  version: 3.0.8
-  resolution: "minimatch@npm:3.0.8"
-  dependencies:
-    brace-expansion: "npm:^1.1.7"
-  checksum: 10c0/72b226f452dcfb5075255f53534cb83fc25565b909e79b9be4fad463d735cb1084827f7013ff41d050e77ee6e474408c6073473edd2fb72c2fd630cfb0acc6ad
   languageName: node
   linkType: hard
 
@@ -1825,7 +1782,6 @@ __metadata:
     grunt-contrib-uglify: "npm:~5.2.2"
     grunt-contrib-watch: "npm:~1.1.0"
     grunt-json-minify: "npm:~1.1.0"
-    grunt-markdown: "npm:~0.7.0"
     grunt-phpunit: "npm:~0.3.6"
     grunt-shell: "npm:~4.0.0"
     load-grunt-tasks: "npm:^5.1.0"

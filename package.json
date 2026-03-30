@@ -25,9 +25,11 @@
     "grunt-contrib-uglify": "~5.2.2",
     "grunt-contrib-watch": "~1.1.0",
     "grunt-json-minify": "~1.1.0",
-    "grunt-markdown": "~0.7.0",
     "grunt-phpunit": "~0.3.6",
     "grunt-shell": "~4.0.0"
+  },
+  "resolutions": {
+    "minimatch": "^3.1.5"
   },
   "packageManager": "yarn@4.13.0"
 }

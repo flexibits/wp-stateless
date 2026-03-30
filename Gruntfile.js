@@ -18,28 +18,6 @@ module.exports = function build( grunt ) {
 
     package: grunt.file.readJSON( 'composer.json' ),
     
-    markdown: {
-      all: {
-        files: [
-          {
-            expand: true,
-            src: 'readme.md',
-            dest: 'static/',
-            ext: '.html'
-          }
-        ],
-        options: {
-          markdownOptions: {
-            gfm: true,
-            codeLines: {
-              before: '<span>',
-              after: '</span>'
-            }
-          }
-        }
-      }
-    },
-
     // Compile LESS
     less: {
       production: {
@@ -211,7 +189,7 @@ module.exports = function build( grunt ) {
   });
 
   // Register tasks
-  grunt.registerTask( 'default', [ 'markdown', 'less' , 'uglify' ] );
+  grunt.registerTask( 'default', [ 'less', 'uglify' ] );
   
   // Run default Tests
   grunt.registerTask( 'localtest', [ 'phpunit:local' ] );

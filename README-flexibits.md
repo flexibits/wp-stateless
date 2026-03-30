@@ -66,3 +66,5 @@ Updated the baked-in Google API library's dependencies (with composer tweaks)
 Switched to Yarn.
 
 Bumped some npm deps.
+
+Removed unused grunt-markdown from devDeps. (was the cause of many Dependabot security warnings)
