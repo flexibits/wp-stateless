@@ -153,7 +153,7 @@ else
   if [ "$RELEASE_VERSION" != "local" ]; then
     git clone $ORIGIN_URL
   else
-    git clone /Users/doubleforte/Flexibits/repos/wp-stateless
+    git clone "$(git rev-parse --show-toplevel)"
   fi
   cd "$( basename `git rev-parse --show-toplevel` )"
   # Be sure we are on the same branch
