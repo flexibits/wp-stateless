@@ -3,7 +3,7 @@
         'name' => 'google/apiclient',
         'pretty_version' => '3.0.x-dev',
         'version' => '3.0.9999999.9999999-dev',
-        'reference' => '982885274481d968177e7908683933bd5f936848',
+        'reference' => '61f6f4c66f0936b13045acedd3a974703451cbab',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'firebase/php-jwt' => array(
-            'pretty_version' => 'v7.0.3',
-            'version' => '7.0.3.0',
-            'reference' => '28aa0694bcfdfa5e2959c394d5a1ee7a5083629e',
+            'pretty_version' => 'v7.0.4',
+            'version' => '7.0.4.0',
+            'reference' => 'e41f1bd7dbe3c5455c3f72d4338cfeb083b71931',
             'type' => 'library',
             'install_path' => __DIR__ . '/../firebase/php-jwt',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'google/apiclient' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '982885274481d968177e7908683933bd5f936848',
+            'reference' => '61f6f4c66f0936b13045acedd3a974703451cbab',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
