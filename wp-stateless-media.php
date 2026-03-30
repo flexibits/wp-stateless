@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WP-Stateless (Flexibits fork v1.0.7)
+ * Plugin Name: WP-Stateless (Flexibits fork v1.0.8)
  * Plugin URI: https://udx.io
  * Description: Upload and serve your WordPress media files from Google Cloud Storage.
  * Author: UDX

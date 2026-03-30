@@ -56,3 +56,11 @@ Updated the baked-in Google API library's dependencies (with composer tweaks)
 Updated the baked-in Google API library's dependencies (with composer tweaks)
 
 `$ pushd lib/Google && composer update --no-dev && popd`
+
+## v1.0.8 (based on 3.2.5, built locally)
+
+Updated the baked-in Google API library's dependencies (with composer tweaks)
+
+`$ pushd lib/Google && composer update --no-dev && popd`
+
+Bumped some pnpm override deps.
