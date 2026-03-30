@@ -13,7 +13,7 @@ overrides:
   picomatch@>=3: ^4.0.4
   minimatch@<3.1.4: 3.1.5
   minimatch@>=9.0.0 <9.0.7: 9.0.9
-  serialize-javascript: ^7.0.4
+  serialize-javascript: ^7.0.5
   webpack-dev-server: ^5.2.1
 
 importers:
@@ -5907,7 +5907,7 @@ packages:
       globby: 12.2.0
       normalize-path: 3.0.0
       schema-utils: 4.3.3
-      serialize-javascript: 7.0.4
+      serialize-javascript: 7.0.5
       webpack: 5.105.4(webpack-cli@5.1.4)
     dev: true
 
@@ -12072,8 +12072,8 @@ packages:
       upper-case-first: 2.0.2
     dev: true
 
-  /serialize-javascript@7.0.4:
-    resolution: {integrity: sha512-DuGdB+Po43Q5Jxwpzt1lhyFSYKryqoNjQSA9M92tyw0lyHIOur+XCalOUe0KTJpyqzT8+fQ5A0Jf7vCx/NKmIg==}
+  /serialize-javascript@7.0.5:
+    resolution: {integrity: sha512-F4LcB0UqUl1zErq+1nYEEzSHJnIwb3AF2XWB94b+afhrekOUijwooAYqFyRbjYkm2PAKBabx6oYv/xDxNi8IBw==}
     engines: {node: '>=20.0.0'}
     dev: true
 
