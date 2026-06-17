@@ -49,5 +49,12 @@
     },
     "scripts": {
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "config": {
+        "policy": {
+            "advisories": {
+                "block": false
+            }
+        }
     }
 }
